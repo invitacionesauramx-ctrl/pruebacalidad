@@ -3,82 +3,112 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Invitación XV</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<title>Invitación Digital</title>
 
 <style>
-
 *{
   margin:0;
   padding:0;
   box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
 }
 
 body{
-  font-family:'Montserrat', sans-serif;
   background:#000;
+  display:flex;
+  justify-content:center;
 }
 
-/* BLOQUES */
-.bloque{
+.contenedor{
+  max-width:430px;
   width:100%;
 }
 
 .bloque img{
   width:100%;
-  height:auto; /* 🔥 no se corta */
   display:block;
 }
 
-/* TEXTO SOBRE IMAGEN (opcional si lo quieres usar) */
-.contenido{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  text-align:center;
+/* BOTÓN AUDIO */
+.audio-btn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  background:linear-gradient(145deg,#ff66c4,#ff2fa4);
+  box-shadow:0 8px 18px rgba(0,0,0,0.5), inset 0 -4px 8px rgba(255,255,255,0.3);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:32px;
   color:white;
-  width:90%;
+  cursor:pointer;
+  z-index:999;
+  transition:0.3s;
 }
 
-h1{
-  font-family:'Dancing Script', cursive;
-  font-size:2.5rem;
-}
-
-@media(max-width:768px){
-  h1{font-size:2rem;}
+.audio-btn:active{
+  transform:scale(0.9);
+  box-shadow:0 4px 10px rgba(0,0,0,0.6);
 }
 
 </style>
 </head>
+
 <body>
 
-<!-- BLOQUE 1 -->
-<section class="bloque">
-  <img src="bloque1.webp" alt="Bloque 1">
-</section>
+<div class="contenedor">
 
-<!-- BLOQUE 2 -->
-<section class="bloque">
-  <img src="bloque2.webp" alt="Bloque 2">
-</section>
+  <div class="bloque"><img src="bloque1.webp"></div>
+  <div class="bloque"><img src="bloque2.webp"></div>
+  <div class="bloque"><img src="bloque3.webp"></div>
+  <div class="bloque"><img src="bloque4.webp"></div>
+  <div class="bloque"><img src="bloque5.webp"></div>
+  <div class="bloque"><img src="bloque6.webp"></div>
+  <div class="bloque"><img src="bloque7.webp"></div>
+  <div class="bloque"><img src="bloque8.webp"></div>
+  <div class="bloque"><img src="bloque9.webp"></div>
+  <div class="bloque"><img src="bloque10.webp"></div>
 
-<!-- BLOQUE 3 -->
-<section class="bloque">
-  <img src="bloque3.webp" alt="Bloque 3">
-</section>
+</div>
 
-<!-- BLOQUE 4 -->
-<section class="bloque">
-  <img src="bloque4.webp" alt="Bloque 4">
-</section>
+<!-- AUDIO -->
+<audio id="musica" loop>
+  <source src="musica.mp3" type="audio/mpeg">
+</audio>
 
-<!-- BLOQUE 5 -->
-<section class="bloque">
-  <img src="bloque5.webp" alt="Bloque 5">
-</section>
+<!-- BOTÓN AUDIO -->
+<div class="audio-btn" id="btnAudio">▶</div>
+
+<script>
+const musica = document.getElementById("musica");
+const btn = document.getElementById("btnAudio");
+
+let reproduciendo = false;
+
+btn.addEventListener("click", () => {
+  if(!reproduciendo){
+    musica.play();
+    btn.innerHTML = "⏸";
+    reproduciendo = true;
+  }else{
+    musica.pause();
+    btn.innerHTML = "▶";
+    reproduciendo = false;
+  }
+});
+
+/* autoplay inteligente móvil */
+document.addEventListener("click", () => {
+  if(!reproduciendo){
+    musica.play();
+    btn.innerHTML = "⏸";
+    reproduciendo = true;
+  }
+},{ once:true });
+</script>
 
 </body>
 </html>
