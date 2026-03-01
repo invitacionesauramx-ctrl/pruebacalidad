@@ -129,7 +129,7 @@ document.addEventListener("touchstart", () => {
   }
 },{ once:true });
 
-<script>
+/* EFECTO SCROLL */
 const bloques = document.querySelectorAll('.bloque');
 
 const observer = new IntersectionObserver(entries => {
@@ -143,7 +143,6 @@ const observer = new IntersectionObserver(entries => {
 });
 
 bloques.forEach(bloque => observer.observe(bloque));
-</script>
 </script>
 
 </body>
