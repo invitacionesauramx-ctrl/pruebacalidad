@@ -76,6 +76,33 @@ body{
   opacity:1;
   transform:translateY(0) scale(1);
 }
+.bloque-btn{
+  position:relative;
+}
+
+.texto-boton{
+  position:absolute;
+  left:50%;
+  top:55%;
+  transform:translate(-50%,-50%);
+  width:75%;
+  text-align:center;
+  font-size:16px;
+  line-height:1.35;
+  color:#5a2a3a;
+  font-weight:500;
+}
+
+.texto-boton span{
+  display:block;
+}
+
+@media(max-width:420px){
+  .texto-boton{
+    font-size:14px;
+  }
+}
+
 </style>
 </head>
 
@@ -84,7 +111,15 @@ body{
 <div class="contenedor">
 
   <div class="bloque"><img src="bloque1.webp" loading="eager"></div>
-  <div class="bloque"><img src="bloque2.webp"></div>
+ <div class="bloque bloque-btn">
+  <img src="bloque2.webp">
+  <div class="texto-boton">
+    <span>Con mucho entusiasmo y alegría,</span>
+    <span>los invitamos a celebrar</span>
+    <span>el momento más especial</span>
+    <span>de mi vida</span>
+  </div>
+</div>
   <div class="bloque"><img src="bloque3.webp"></div>
   <div class="bloque"><img src="bloque4.webp"></div>
   <div class="bloque"><img src="bloque5.webp"></div>
@@ -129,7 +164,7 @@ document.addEventListener("touchstart", () => {
   }
 },{ once:true });
 
-/* EFECTO SCROLL */
+<script>
 const bloques = document.querySelectorAll('.bloque');
 
 const observer = new IntersectionObserver(entries => {
