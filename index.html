@@ -149,7 +149,7 @@ btn.addEventListener("click", () => {
     musica.play();
     btn.innerHTML = "⏸";
     activo = true;
-  }else{
+  } else {
     musica.pause();
     btn.innerHTML = "▶";
     activo = false;
@@ -164,7 +164,7 @@ document.addEventListener("touchstart", () => {
   }
 },{ once:true });
 
-<script>
+/* EFECTO SCROLL */
 const bloques = document.querySelectorAll('.bloque');
 
 const observer = new IntersectionObserver(entries => {
