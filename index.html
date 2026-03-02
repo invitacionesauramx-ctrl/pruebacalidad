@@ -31,7 +31,7 @@ body{
   display:block;
 }
 
-/* BOTÓN AUDIO 3D */
+/* BOTÓN AUDIO */
 .audio-btn{
   position:fixed;
   bottom:20px;
@@ -40,9 +40,9 @@ body{
   height:70px;
   border-radius:50%;
   background:linear-gradient(145deg,#ff6bd6,#ff1aa3);
-  box-shadow:0 10px 20px rgba(0,0,0,.6),
-             inset 0 -4px 8px rgba(255,255,255,.35),
-             inset 0 4px 6px rgba(0,0,0,.4);
+  box-shadow:0 10px 20px rgba(0,0,0,0.6),
+             inset 0 -4px 8px rgba(255,255,255,0.35),
+             inset 0 4px 6px rgba(0,0,0,0.4);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -69,10 +69,31 @@ body{
   transform:none !important;
 }
 
-/* PARTICULAS BLOQUES */
+/* TEXTO BLOQUE 2 */
+.bloque-btn{ position:relative; }
+
+.texto-boton{
+  position:absolute;
+  left:50%;
+  top:84%;
+  transform:translate(-50%,-50%);
+  width:72%;
+  text-align:center;
+  font-size:16px;
+  line-height:1.35;
+  color:#5a2a3a;
+  font-weight:500;
+  pointer-events:none;
+}
+
+.texto-boton span{ display:block; }
+
+/* PARTICULAS */
 .bloque-particulas,
 .bloque-particulas-xv,
-.bloque-contador{ position:relative; }
+.bloque-contador{
+  position:relative;
+}
 
 canvas{
   position:absolute;
@@ -82,7 +103,7 @@ canvas{
   pointer-events:none;
 }
 
-/* CONTADOR PREMIUM */
+/* CONTADOR */
 .countdown{
   position:absolute;
   bottom:14%;
@@ -96,22 +117,20 @@ canvas{
 .time-box{
   width:68px;
   height:78px;
-  background:linear-gradient(145deg,#ff8ad6,#ff1493);
+  background:linear-gradient(145deg,#ff86cf,#ff3fa7);
   border-radius:14px;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   color:#fff;
-  box-shadow:0 0 15px rgba(255,0,170,.7),
-             0 0 35px rgba(255,0,170,.5);
+  box-shadow:0 0 18px rgba(255,0,170,.6);
   animation:floatPink 3s ease-in-out infinite;
 }
 
 .time-box span{
   font-size:26px;
   font-weight:700;
-  text-shadow:0 0 8px rgba(255,255,255,.6);
 }
 
 .time-box small{
@@ -123,7 +142,6 @@ canvas{
   50%{transform:translateY(-6px)}
   100%{transform:translateY(0)}
 }
-
 </style>
 </head>
 
@@ -133,16 +151,22 @@ canvas{
 
 <div class="bloque bloque-particulas">
   <img src="bloque1.webp">
-  <canvas id="p1"></canvas>
+  <canvas id="particulas"></canvas>
 </div>
 
-<div class="bloque">
+<div class="bloque bloque-btn">
   <img src="bloque2.webp">
+  <div class="texto-boton">
+    <span>Con mucho entusiasmo y alegría,</span>
+    <span>los invitamos a celebrar</span>
+    <span>el momento más especial</span>
+    <span>de mi vida</span>
+  </div>
 </div>
 
 <div class="bloque bloque-particulas-xv">
   <img src="bloque3.webp">
-  <canvas id="pXV"></canvas>
+  <canvas id="particulasXV"></canvas>
 </div>
 
 <div class="bloque"><img src="bloque4.webp"></div>
@@ -158,7 +182,7 @@ canvas{
     <div class="time-box"><span id="segundos">00</span><small>SEG</small></div>
   </div>
 
-  <canvas id="pCount"></canvas>
+  <canvas id="particulasCountdown"></canvas>
 </div>
 
 <div class="bloque"><img src="bloque7.webp"></div>
@@ -176,8 +200,8 @@ canvas{
 
 <script>
 /* AUDIO */
-const musica = document.getElementById("musica");
-const btn = document.getElementById("btnAudio");
+const musica=document.getElementById("musica");
+const btn=document.getElementById("btnAudio");
 let activo=false;
 
 btn.onclick=()=>{
@@ -185,59 +209,103 @@ btn.onclick=()=>{
   else{ musica.pause(); btn.innerHTML="▶"; activo=false; }
 };
 
-/* SCROLL FIX */
+/* SCROLL FIX REAL */
 const bloques=document.querySelectorAll('.bloque');
 const obs=new IntersectionObserver(e=>{
   e.forEach(x=>{ if(x.isIntersecting)x.target.classList.add('visible'); });
 },{threshold:.08});
 
 bloques.forEach(b=>obs.observe(b));
-window.onload=()=>bloques.forEach(b=>{
-  if(b.getBoundingClientRect().top<window.innerHeight*1.1)
-    b.classList.add('visible');
+window.addEventListener("load",()=>{
+  bloques.forEach(b=>{
+    if(b.getBoundingClientRect().top<window.innerHeight*1.1)
+      b.classList.add('visible');
+  });
 });
+
+/* PARTICULAS BLOQUE 1 */
+const c1=document.getElementById("particulas");
+const x1=c1.getContext("2d");
+function rs1(){c1.width=c1.offsetWidth;c1.height=c1.offsetHeight}
+rs1();addEventListener("resize",rs1);
+
+let p1=[];
+for(let i=0;i<40;i++)p1.push({x:Math.random()*c1.width,y:Math.random()*c1.height,dx:(Math.random()-.5)*.6,dy:(Math.random()-.5)*.6,r:Math.random()*2+1,a:Math.random()});
+function loop1(){
+  x1.clearRect(0,0,c1.width,c1.height);
+  p1.forEach(p=>{
+    x1.beginPath();
+    x1.arc(p.x,p.y,p.r,0,Math.PI*2);
+    x1.fillStyle=`rgba(255,215,0,${p.a})`;
+    x1.fill();
+    p.x+=p.dx;p.y+=p.dy;
+    if(p.x<0||p.x>c1.width)p.dx*=-1;
+    if(p.y<0||p.y>c1.height)p.dy*=-1;
+  });
+  requestAnimationFrame(loop1);
+}
+loop1();
+
+/* PARTICULAS BLOQUE 3 */
+const cXV=document.getElementById("particulasXV");
+const xXV=cXV.getContext("2d");
+function rsXV(){cXV.width=cXV.offsetWidth;cXV.height=cXV.offsetHeight}
+rsXV();addEventListener("resize",rsXV);
+
+let pXV=[];
+for(let i=0;i<20;i++)pXV.push({x:cXV.width/2,y:cXV.height/2,dx:(Math.random()-.5)*1.4,dy:(Math.random()-.5)*1.4,r:Math.random()*2+1,a:Math.random()});
+function loopXV(){
+  xXV.clearRect(0,0,cXV.width,cXV.height);
+  pXV.forEach(p=>{
+    xXV.beginPath();
+    xXV.arc(p.x,p.y,p.r,0,Math.PI*2);
+    xXV.fillStyle=`rgba(192,192,192,${p.a})`;
+    xXV.fill();
+    p.x+=p.dx;p.y+=p.dy;
+  });
+  requestAnimationFrame(loopXV);
+}
+loopXV();
 
 /* CONTADOR */
 const fechaEvento=new Date("2026-12-24T22:00:00").getTime();
 setInterval(()=>{
-  const now=Date.now();
-  let diff=fechaEvento-now;
-  if(diff<0) return;
-  document.getElementById("dias").innerText=Math.floor(diff/86400000);
-  document.getElementById("horas").innerText=Math.floor(diff/3600000)%24;
-  document.getElementById("minutos").innerText=Math.floor(diff/60000)%60;
-  document.getElementById("segundos").innerText=Math.floor(diff/1000)%60;
+  const d=Math.max(0,fechaEvento-Date.now());
+  document.getElementById("dias").innerText=Math.floor(d/86400000).toString().padStart(2,"0");
+  document.getElementById("horas").innerText=Math.floor(d/3600000)%24;
+  document.getElementById("minutos").innerText=Math.floor(d/60000)%60;
+  document.getElementById("segundos").innerText=Math.floor(d/1000)%60;
 },1000);
 
-/* PARTICULAS ROSAS 4D */
-const c=document.getElementById("pCount"),ctx=c.getContext("2d");
-function resize(){c.width=c.offsetWidth;c.height=c.offsetHeight}
-resize();addEventListener("resize",resize);
+/* PARTICULAS ROSAS CONTADOR */
+const cC=document.getElementById("particulasCountdown");
+const xC=cC.getContext("2d");
+function rsC(){cC.width=cC.offsetWidth;cC.height=cC.offsetHeight}
+rsC();addEventListener("resize",rsC);
 
-let parts=[];
+let pC=[];
 function spawn(){
-  return{ x:c.width/2+(Math.random()*200-100),
-          y:c.height*.75,
-          r:Math.random()*2+1,
+  return{ x:cC.width/2+(Math.random()*200-100),
+          y:cC.height*.75,
           dx:(Math.random()-.5)*1.2,
           dy:-Math.random()*2-1,
-          a:1 }
+          r:Math.random()*2+1,
+          a:1 };
 }
-
-function loop(){
-  ctx.clearRect(0,0,c.width,c.height);
-  if(parts.length<120) parts.push(spawn());
-  parts.forEach((p,i)=>{
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(255,80,180,${p.a})`;
-    ctx.fill();
-    p.x+=p.dx; p.y+=p.dy; p.a-=.015;
-    if(p.a<=0) parts.splice(i,1);
+function loopC(){
+  xC.clearRect(0,0,cC.width,cC.height);
+  if(pC.length<120)pC.push(spawn());
+  pC.forEach((p,i)=>{
+    xC.beginPath();
+    xC.arc(p.x,p.y,p.r,0,Math.PI*2);
+    xC.fillStyle=`rgba(255,80,180,${p.a})`;
+    xC.fill();
+    p.x+=p.dx;p.y+=p.dy;p.a-=.015;
+    if(p.a<=0)pC.splice(i,1);
   });
-  requestAnimationFrame(loop);
+  requestAnimationFrame(loopC);
 }
-loop();
+loopC();
 </script>
 
 </body>
