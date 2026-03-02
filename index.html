@@ -308,77 +308,8 @@ function animarParticulasXV() {
 }
 animarParticulasXV();
 
-<script>
-const canvasXV = document.getElementById('particulasXV');
-const ctx = canvasXV.getContext('2d');
 
-let w = canvasXV.width = canvasXV.offsetWidth;
-let h = canvasXV.height = canvasXV.offsetHeight;
 
-window.addEventListener('resize', () => {
-  w = canvasXV.width = canvasXV.offsetWidth;
-  h = canvasXV.height = canvasXV.offsetHeight;
-});
-
-// PARTICULAS NORMALES
-const numParticulas = 20; // aquí cambias si quieres más
-const particulas = [];
-for(let i=0;i<numParticulas;i++){
-  particulas.push({
-    x: Math.random()*w,
-    y: Math.random()*h,
-    r: Math.random()*2+1,
-    dx: (Math.random()-0.5)*0.5,
-    dy: (Math.random()-0.5)*0.5,
-    alpha: Math.random()*0.8+0.2
-  });
-}
-
-// DESTELLOS SECUNDARIOS
-const destellos = [
-  { x: w*0.25, y: h*0.35, r:4, alpha:0, delay:0 },      // izquierda
-  { x: w*0.75, y: h*0.35, r:4, alpha:0, delay:500 },    // derecha
-  { x: w*0.5,  y: h*0.7,  r:4, alpha:0, delay:1000 }    // abajo
-];
-
-let startTime = null;
-
-function animar(timestamp){
-  if(!startTime) startTime = timestamp;
-  let t = timestamp - startTime;
-
-  ctx.clearRect(0,0,w,h);
-
-  // Dibujar partículas normales
-  particulas.forEach(p=>{
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle = `rgba(192,192,192,${p.alpha})`; // plata
-    ctx.fill();
-    p.x += p.dx;
-    p.y += p.dy;
-
-    if(p.x<0||p.x>w)p.dx*=-1;
-    if(p.y<0||p.y>h)p.dy*=-1;
-  });
-
-  // Dibujar destellos en secuencia
-  destellos.forEach(d=>{
-    if(t > d.delay){
-      let phase = (t - d.delay) % 1000; // duración del destello
-      d.alpha = Math.abs(Math.sin((phase/1000)*Math.PI));
-      ctx.beginPath();
-      ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
-      ctx.fillStyle = `rgba(192,192,192,${d.alpha})`;
-      ctx.fill();
-    }
-  });
-
-  requestAnimationFrame(animar);
-}
-
-animar();
 </script>
-
 </body>
 </html>
