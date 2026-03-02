@@ -118,22 +118,23 @@ body{
 
 .bloque-reflejo {
   position: relative;
-  overflow: hidden;
+  overflow: visible; /* antes estaba hidden */
 }
 
 .bloque-reflejo::after {
   content: "";
   position: absolute;
   left: 0;
-  bottom: 0;
+  bottom: -5%;  /* sube un poquito para que se vea */
   width: 100%;
-  height: 40%; 
-  background: linear-gradient(to bottom, rgba(255,255,255,0.25), rgba(255,255,255,0));
+  height: 50%; 
+  background: linear-gradient(to bottom, rgba(255,255,255,0.35), rgba(255,255,255,0)); 
   transform: scaleY(-1);
   pointer-events: none;
-  filter: blur(6px); 
+  filter: blur(6px);
+  opacity: 0.6; /* un poco más visible */
+  transition: opacity 1s ease; /* opcional, para suavizar al aparecer */
 }
-
 </style>
 </head>
 
