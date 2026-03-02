@@ -115,26 +115,25 @@ body{
   width: 100%;
   height: 100%;
 }
-
-.bloque-reflejo {
+.bloque-particulas-xv {
   position: relative;
-  overflow: visible; /* antes estaba hidden */
 }
 
-.bloque-reflejo::after {
-  content: "";
+.bloque-particulas-xv canvas {
   position: absolute;
-  left: 0;
-  bottom: -5%;  /* sube un poquito para que se vea */
-  width: 100%;
-  height: 50%; 
-  background: linear-gradient(to bottom, rgba(255,255,255,0.35), rgba(255,255,255,0)); 
-  transform: scaleY(-1);
+  inset: 0;
   pointer-events: none;
-  filter: blur(6px);
-  opacity: 0.6; /* un poco más visible */
-  transition: opacity 1s ease; /* opcional, para suavizar al aparecer */
+  width: 100%;
+  height: 100%;
+  z-index: 10;
 }
+
+/* Para controlar la posición desde JS */
+.particula-xv {
+  --offset-x: 50%; /* porcentaje horizontal del canvas donde salen partículas */
+  --offset-y: 50%; /* porcentaje vertical */
+}
+
 </style>
 </head>
 
@@ -155,8 +154,9 @@ body{
     <span>de mi vida</span>
   </div>
 </div>
-<div class="bloque bloque-reflejo">
+<div class="bloque bloque-particulas-xv">
   <img src="bloque3.webp">
+  <canvas id="particulasXV"></canvas>
 </div>
   <div class="bloque"><img src="bloque4.webp"></div>
   <div class="bloque"><img src="bloque5.webp"></div>
@@ -259,6 +259,54 @@ function animarParticulas(){
   requestAnimationFrame(animarParticulas);
 }
 animarParticulas();
+
+const canvasXV = document.getElementById('particulasXV');
+const ctxXV = canvasXV.getContext('2d');
+
+let wXV = canvasXV.width = canvasXV.offsetWidth;
+let hXV = canvasXV.height = canvasXV.offsetHeight;
+
+window.addEventListener('resize', () => {
+  wXV = canvasXV.width = canvasXV.offsetWidth;
+  hXV = canvasXV.height = canvasXV.offsetHeight;
+});
+
+// Configuración partículas
+const numParticulasXV = 8; // pocas partículas
+const particulasXV = [];
+
+const offsetX = wXV * 0.5; // posición horizontal inicial (ajustable)
+const offsetY = hXV * 0.5; // posición vertical inicial (ajustable)
+
+for (let i = 0; i < numParticulasXV; i++) {
+  particulasXV.push({
+    x: offsetX,
+    y: offsetY,
+    r: Math.random() * 1.5 + 1, // radio pequeño
+    dx: (Math.random() - 0.5) * 1.5,
+    dy: (Math.random() - 0.5) * 1.5,
+    alpha: Math.random() * 0.8 + 0.3
+  });
+}
+
+function animarParticulasXV() {
+  ctxXV.clearRect(0, 0, wXV, hXV);
+  particulasXV.forEach(p => {
+    ctxXV.beginPath();
+    ctxXV.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctxXV.fillStyle = `rgba(192,192,192,${p.alpha})`; // plata metálico
+    ctxXV.fill();
+
+    p.x += p.dx;
+    p.y += p.dy;
+
+    // rebote ligero dentro del área del canvas
+    if (p.x < 0 || p.x > wXV) p.dx *= -1;
+    if (p.y < 0 || p.y > hXV) p.dy *= -1;
+  });
+  requestAnimationFrame(animarParticulasXV);
+}
+animarParticulasXV();
 
 </script>
 </body>
