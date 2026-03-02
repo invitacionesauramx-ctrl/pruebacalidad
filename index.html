@@ -106,42 +106,30 @@ body{
   }
 }
 
-/* BLOQUES PARTICULAS */
-.bloque-particulas, 
+/* PARTICULAS SOBRE IMAGEN */
+.bloque-particulas,
 .bloque-particulas-xv,
 .bloque-particulas-luci {
   position: relative;
 }
 
-/* Para luciérnagas */
+.bloque-particulas img,
+.bloque-particulas-xv img,
 .bloque-particulas-luci img {
   position: relative;
-  z-index: 1;
+  z-index: 1; /* imagen delante */
 }
 
+.bloque-particulas canvas,
+.bloque-particulas-xv canvas,
 .bloque-particulas-luci canvas {
   position: absolute;
   inset: 0;
   pointer-events: none;
   width: 100%;
   height: 100%;
-  z-index: 0;
+  z-index: 2; /* partículas sobre imagen */
   background: transparent;
-  mix-blend-mode: lighten;
-}
-
-/* Para partículas doradas y plata */
-.bloque-particulas img,
-.bloque-particulas-xv img {
-  position: relative;
-  z-index: 1;
-}
-
-.bloque-particulas canvas,
-.bloque-particulas-xv canvas {
-  z-index: 0;
-  background: transparent;
-  mix-blend-mode: lighten;
 }
 </style>
 </head>
@@ -193,6 +181,7 @@ body{
 <div class="audio-btn" id="btnAudio">▶</div>
 
 <script>
+// AUDIO
 const musica = document.getElementById("musica");
 const btn = document.getElementById("btnAudio");
 let activo = false;
@@ -217,7 +206,7 @@ document.addEventListener("touchstart", () => {
   }
 },{ once:true });
 
-/* EFECTO SCROLL */
+// SCROLL EFECTO
 const bloques = document.querySelectorAll('.bloque');
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
@@ -225,16 +214,21 @@ const observer = new IntersectionObserver(entries => {
       entry.target.classList.add('visible');
     }
   });
-},{ threshold:0.15 });
-
+},{
+  threshold:0.15
+});
 bloques.forEach(bloque => observer.observe(bloque));
 
-/* PARTICULAS DORADAS */
+// PARTICULAS DORADAS
 const canvas = document.getElementById('particulas');
 const ctx = canvas.getContext('2d');
 let w = canvas.width = canvas.offsetWidth;
 let h = canvas.height = canvas.offsetHeight;
-window.addEventListener('resize', () => { w = canvas.width = canvas.offsetWidth; h = canvas.height = canvas.offsetHeight; });
+
+window.addEventListener('resize', () => {
+  w = canvas.width = canvas.offsetWidth;
+  h = canvas.height = canvas.offsetHeight;
+});
 
 const numParticulas = 40;
 const particulas = [];
@@ -254,7 +248,7 @@ function animarParticulas(){
   particulas.forEach(p=>{
     ctx.beginPath();
     ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle = `rgba(255,215,0,${p.alpha*0.5})`; // más translúcido
+    ctx.fillStyle = `rgba(255,215,0,${p.alpha})`;
     ctx.fill();
     p.x += p.dx;
     p.y += p.dy;
@@ -265,18 +259,22 @@ function animarParticulas(){
 }
 animarParticulas();
 
-/* PARTICULAS PLATA */
+// PARTICULAS PLATA
 const canvasXV = document.getElementById('particulasXV');
 const ctxXV = canvasXV.getContext('2d');
 let wXV = canvasXV.width = canvasXV.offsetWidth;
 let hXV = canvasXV.height = canvasXV.offsetHeight;
-window.addEventListener('resize', () => { wXV = canvasXV.width = canvasXV.offsetWidth; hXV = canvasXV.height = canvasXV.offsetHeight; });
+
+window.addEventListener('resize', () => {
+  wXV = canvasXV.width = canvasXV.offsetWidth;
+  hXV = canvasXV.height = canvasXV.offsetHeight;
+});
 
 const numParticulasXV = 15;
 const particulasXV = [];
 const offsetX = wXV * 0.5;
 const offsetY = hXV * 0.5;
-for(let i=0;i<numParticulasXV;i++){
+for (let i = 0; i < numParticulasXV; i++) {
   particulasXV.push({
     x: offsetX,
     y: offsetY,
@@ -287,12 +285,12 @@ for(let i=0;i<numParticulasXV;i++){
   });
 }
 
-function animarParticulasXV(){
+function animarParticulasXV() {
   ctxXV.clearRect(0,0,wXV,hXV);
   particulasXV.forEach(p=>{
     ctxXV.beginPath();
     ctxXV.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctxXV.fillStyle = `rgba(192,192,192,${p.alpha*0.5})`; // más translúcido
+    ctxXV.fillStyle = `rgba(192,192,192,${p.alpha})`;
     ctxXV.fill();
     p.x += p.dx;
     p.y += p.dy;
@@ -303,12 +301,16 @@ function animarParticulasXV(){
 }
 animarParticulasXV();
 
-/* LUCIERNAGAS */
+// LUCIERNAGAS
 const canvasLuci = document.getElementById('particulasLuci');
 const ctxLuci = canvasLuci.getContext('2d');
 let wL = canvasLuci.width = canvasLuci.offsetWidth;
 let hL = canvasLuci.height = canvasLuci.offsetHeight;
-window.addEventListener('resize', () => { wL = canvasLuci.width = canvasLuci.offsetWidth; hL = canvasLuci.height = canvasLuci.offsetHeight; });
+
+window.addEventListener('resize', () => {
+  wL = canvasLuci.width = canvasLuci.offsetWidth;
+  hL = canvasLuci.height = canvasLuci.offsetHeight;
+});
 
 const destellosLuci = [
   { x: wL*0.2, y: hL*0.3, r:3, alpha:0 },
@@ -317,6 +319,7 @@ const destellosLuci = [
 ];
 
 let startTimeL = null;
+
 function animarLuci(timestamp){
   if(!startTimeL) startTimeL = timestamp;
   let t = timestamp - startTimeL;
