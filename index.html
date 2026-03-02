@@ -104,6 +104,18 @@ body{
     width: 80%; /* Ajuste móvil */
   }
 }
+.bloque-particulas {
+  position: relative;
+}
+
+.bloque-particulas canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+}
+
 </style>
 </head>
 
@@ -111,7 +123,10 @@ body{
 
 <div class="contenedor">
 
-  <div class="bloque"><img src="bloque1.webp" loading="eager"></div>
+<div class="bloque bloque-particulas">
+  <img src="bloque1.webp" loading="eager">
+  <canvas id="particulas"></canvas>
+</div>
  <div class="bloque bloque-btn">
   <img src="bloque2.webp">
   <div class="texto-boton">
@@ -179,7 +194,51 @@ const observer = new IntersectionObserver(entries => {
 });
 
 bloques.forEach(bloque => observer.observe(bloque));
-</script>
 
+const canvas = document.getElementById('particulas');
+const ctx = canvas.getContext('2d');
+
+let w = canvas.width = canvas.offsetWidth;
+let h = canvas.height = canvas.offsetHeight;
+
+window.addEventListener('resize', () => {
+  w = canvas.width = canvas.offsetWidth;
+  h = canvas.height = canvas.offsetHeight;
+});
+
+// Generar partículas
+const numParticulas = 40;
+const particulas = [];
+
+for(let i=0;i<numParticulas;i++){
+  particulas.push({
+    x: Math.random()*w,
+    y: Math.random()*h,
+    r: Math.random()*2+1,
+    dx: (Math.random()-0.5)*0.7,
+    dy: (Math.random()-0.5)*0.7,
+    alpha: Math.random()*0.8+0.2
+  });
+}
+
+function animarParticulas(){
+  ctx.clearRect(0,0,w,h);
+  particulas.forEach(p=>{
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle = `rgba(255,215,0,${p.alpha})`; // dorado
+    ctx.fill();
+    p.x += p.dx;
+    p.y += p.dy;
+
+    // rebote de bordes
+    if(p.x<0||p.x>w)p.dx*=-1;
+    if(p.y<0||p.y>h)p.dy*=-1;
+  });
+  requestAnimationFrame(animarParticulas);
+}
+animarParticulas();
+
+</script>
 </body>
 </html>
