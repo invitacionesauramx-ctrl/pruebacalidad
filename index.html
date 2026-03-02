@@ -5,101 +5,144 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Invitación Digital</title>
 
-<link rel="preload" href="bloque1.webp" as="image">
-<link rel="preload" href="bloque2.webp" as="image">
-<link rel="preload" href="bloque3.webp" as="image">
-
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
-html{scroll-behavior:smooth;}
-body{background:#000;display:flex;justify-content:center;}
-.contenedor{max-width:430px;width:100%;}
-.bloque img{width:100%;display:block;}
-
-/* BOTÓN AUDIO */
-.audio-btn{
-  position:fixed;bottom:20px;right:20px;width:70px;height:70px;border-radius:50%;
-  background:linear-gradient(145deg,#ff6bd6,#ff1aa3);
-  box-shadow:0 10px 20px rgba(0,0,0,.6), inset 0 -4px 8px rgba(255,255,255,.35), inset 0 4px 6px rgba(0,0,0,.4);
-  display:flex;align-items:center;justify-content:center;font-size:30px;color:#fff;
-  cursor:pointer;z-index:999;transition:.25s;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
 }
-.audio-btn:active{transform:scale(.92);}
+
+html{ scroll-behavior:smooth; }
+
+body{
+  background:#000;
+  display:flex;
+  justify-content:center;
+}
+
+.contenedor{
+  max-width:430px;
+  width:100%;
+}
+
+.bloque img{
+  width:100%;
+  display:block;
+}
+
+/* BOTÓN AUDIO 3D */
+.audio-btn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  background:linear-gradient(145deg,#ff6bd6,#ff1aa3);
+  box-shadow:0 10px 20px rgba(0,0,0,.6),
+             inset 0 -4px 8px rgba(255,255,255,.35),
+             inset 0 4px 6px rgba(0,0,0,.4);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
+  color:#fff;
+  cursor:pointer;
+  z-index:999;
+}
 
 /* EFECTO SCROLL */
 .bloque{
   opacity:0;
   transform:translateY(40px) scale(.98);
-  transition:all .9s cubic-bezier(.19,1,.22,1);
-}
-.bloque.visible{opacity:1;transform:translateY(0) scale(1);}
-
-/* FORZAR VISIBILIDAD INICIAL */
-.bloque:first-child{opacity:1!important;transform:none!important;}
-
-.bloque-btn{position:relative;}
-.texto-boton{
-  position:absolute;left:50%;top:84%;
-  transform:translate(-50%,-50%);
-  width:72%;text-align:center;font-size:16px;line-height:1.35;
-  color:#5a2a3a;font-weight:500;pointer-events:none;
-}
-.texto-boton span{display:block;}
-
-@media(max-width:420px){
-  .texto-boton{font-size:14px;width:80%;}
+  transition:.9s cubic-bezier(.19,1,.22,1);
 }
 
-.bloque-particulas, .bloque-particulas-xv, .bloque-contador{position:relative;}
-canvas{position:absolute;inset:0;pointer-events:none;}
+.bloque.visible{
+  opacity:1;
+  transform:translateY(0) scale(1);
+}
 
-/* CONTADOR */
+.bloque:first-child{
+  opacity:1 !important;
+  transform:none !important;
+}
+
+/* PARTICULAS BLOQUES */
+.bloque-particulas,
+.bloque-particulas-xv,
+.bloque-contador{ position:relative; }
+
+canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+}
+
+/* CONTADOR PREMIUM */
 .countdown{
-  position:absolute;bottom:14%;left:50%;transform:translateX(-50%);
-  display:flex;gap:10px;z-index:5;
+  position:absolute;
+  bottom:14%;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:10px;
+  z-index:5;
 }
+
 .time-box{
-  width:68px;height:78px;border-radius:14px;
-  background:linear-gradient(145deg,#ff86cf,#ff3fa7);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  width:68px;
+  height:78px;
+  background:linear-gradient(145deg,#ff8ad6,#ff1493);
+  border-radius:14px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
   color:#fff;
-  box-shadow:0 10px 25px rgba(255,0,160,.45),
-             inset 0 -3px 6px rgba(255,255,255,.35),
-             inset 0 4px 6px rgba(0,0,0,.3);
+  box-shadow:0 0 15px rgba(255,0,170,.7),
+             0 0 35px rgba(255,0,170,.5);
   animation:floatPink 3s ease-in-out infinite;
 }
-.time-box span{font-size:26px;font-weight:700;}
-.time-box small{font-size:11px;letter-spacing:1px;opacity:.9;}
+
+.time-box span{
+  font-size:26px;
+  font-weight:700;
+  text-shadow:0 0 8px rgba(255,255,255,.6);
+}
+
+.time-box small{
+  font-size:11px;
+}
 
 @keyframes floatPink{
   0%{transform:translateY(0)}
   50%{transform:translateY(-6px)}
   100%{transform:translateY(0)}
 }
+
 </style>
 </head>
 
 <body>
+
 <div class="contenedor">
 
 <div class="bloque bloque-particulas">
-  <img src="bloque1.webp" loading="eager">
-  <canvas id="particulas"></canvas>
+  <img src="bloque1.webp">
+  <canvas id="p1"></canvas>
 </div>
 
-<div class="bloque bloque-btn">
+<div class="bloque">
   <img src="bloque2.webp">
-  <div class="texto-boton">
-    <span>Con mucho entusiasmo y alegría,</span>
-    <span>los invitamos a celebrar</span>
-    <span>el momento más especial</span>
-    <span>de mi vida</span>
-  </div>
 </div>
 
 <div class="bloque bloque-particulas-xv">
   <img src="bloque3.webp">
-  <canvas id="particulasXV"></canvas>
+  <canvas id="pXV"></canvas>
 </div>
 
 <div class="bloque"><img src="bloque4.webp"></div>
@@ -115,7 +158,7 @@ canvas{position:absolute;inset:0;pointer-events:none;}
     <div class="time-box"><span id="segundos">00</span><small>SEG</small></div>
   </div>
 
-  <canvas id="particulasCountdown"></canvas>
+  <canvas id="pCount"></canvas>
 </div>
 
 <div class="bloque"><img src="bloque7.webp"></div>
@@ -133,47 +176,69 @@ canvas{position:absolute;inset:0;pointer-events:none;}
 
 <script>
 /* AUDIO */
-const musica=document.getElementById("musica");
-const btn=document.getElementById("btnAudio");
+const musica = document.getElementById("musica");
+const btn = document.getElementById("btnAudio");
 let activo=false;
 
 btn.onclick=()=>{
-  activo?musica.pause():musica.play();
-  btn.innerHTML=activo?"▶":"⏸";
-  activo=!activo;
+  if(!activo){ musica.play(); btn.innerHTML="⏸"; activo=true; }
+  else{ musica.pause(); btn.innerHTML="▶"; activo=false; }
 };
-document.addEventListener("touchstart",()=>{if(!activo){musica.play();btn.innerHTML="⏸";activo=true;}},{once:true});
 
 /* SCROLL FIX */
-const bloques=document.querySelectorAll(".bloque");
-const observer=new IntersectionObserver(entries=>{
-  entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add("visible");});
+const bloques=document.querySelectorAll('.bloque');
+const obs=new IntersectionObserver(e=>{
+  e.forEach(x=>{ if(x.isIntersecting)x.target.classList.add('visible'); });
 },{threshold:.08});
 
-bloques.forEach(b=>observer.observe(b));
-
-window.addEventListener("load",()=>{
-  bloques.forEach(b=>{
-    const r=b.getBoundingClientRect();
-    if(r.top<window.innerHeight*1.1)b.classList.add("visible");
-  });
+bloques.forEach(b=>obs.observe(b));
+window.onload=()=>bloques.forEach(b=>{
+  if(b.getBoundingClientRect().top<window.innerHeight*1.1)
+    b.classList.add('visible');
 });
 
 /* CONTADOR */
-const fechaEvento=new Date("2026-02-24T22:00:00").getTime();
-const d=document.getElementById("dias");
-const h=document.getElementById("horas");
-const m=document.getElementById("minutos");
-const s=document.getElementById("segundos");
-
+const fechaEvento=new Date("2026-12-24T22:00:00").getTime();
 setInterval(()=>{
-  const diff=fechaEvento-new Date().getTime();
-  if(diff<0)return;
-  d.textContent=Math.floor(diff/(1000*60*60*24)).toString().padStart(2,"0");
-  h.textContent=Math.floor(diff/(1000*60*60)%24).toString().padStart(2,"0");
-  m.textContent=Math.floor(diff/(1000*60)%60).toString().padStart(2,"0");
-  s.textContent=Math.floor(diff/1000%60).toString().padStart(2,"0");
+  const now=Date.now();
+  let diff=fechaEvento-now;
+  if(diff<0) return;
+  document.getElementById("dias").innerText=Math.floor(diff/86400000);
+  document.getElementById("horas").innerText=Math.floor(diff/3600000)%24;
+  document.getElementById("minutos").innerText=Math.floor(diff/60000)%60;
+  document.getElementById("segundos").innerText=Math.floor(diff/1000)%60;
 },1000);
+
+/* PARTICULAS ROSAS 4D */
+const c=document.getElementById("pCount"),ctx=c.getContext("2d");
+function resize(){c.width=c.offsetWidth;c.height=c.offsetHeight}
+resize();addEventListener("resize",resize);
+
+let parts=[];
+function spawn(){
+  return{ x:c.width/2+(Math.random()*200-100),
+          y:c.height*.75,
+          r:Math.random()*2+1,
+          dx:(Math.random()-.5)*1.2,
+          dy:-Math.random()*2-1,
+          a:1 }
+}
+
+function loop(){
+  ctx.clearRect(0,0,c.width,c.height);
+  if(parts.length<120) parts.push(spawn());
+  parts.forEach((p,i)=>{
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,80,180,${p.a})`;
+    ctx.fill();
+    p.x+=p.dx; p.y+=p.dy; p.a-=.015;
+    if(p.a<=0) parts.splice(i,1);
+  });
+  requestAnimationFrame(loop);
+}
+loop();
 </script>
+
 </body>
 </html>
