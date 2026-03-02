@@ -5,40 +5,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Invitación Digital</title>
 
-<link rel="preload" href="bloque1.webp" as="image">
-<link rel="preload" href="bloque2.webp" as="image">
-<link rel="preload" href="bloque3.webp" as="image">
-
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
 html{scroll-behavior:smooth;}
 body{background:#000;display:flex;justify-content:center;}
 .contenedor{max-width:430px;width:100%;}
-.bloque img{width:100%;display:block;}
 
-/* BOTÓN AUDIO */
-.audio-btn{
-  position:fixed;bottom:20px;right:20px;width:70px;height:70px;
-  border-radius:50%;background:linear-gradient(145deg,#ff6bd6,#ff1aa3);
-  box-shadow:0 10px 20px rgba(0,0,0,0.6),
-  inset 0 -4px 8px rgba(255,255,255,0.35),
-  inset 0 4px 6px rgba(0,0,0,0.4);
-  display:flex;align-items:center;justify-content:center;
-  font-size:30px;color:#fff;cursor:pointer;z-index:999;
+.bloque{
+  position:relative;
 }
 
-/* EFECTO SCROLL */
-.bloque{opacity:0;transform:translateY(40px) scale(.98);transition:.9s;}
-.bloque.visible{opacity:1;transform:none;}
+.bloque img{
+  width:100%;
+  display:block;
+  position:relative;
+  z-index:1;
+}
 
-.bloque-particulas,
-.bloque-particulas-xv,
-.bloque-contador{position:relative;}
-
+/* CANVAS */
 canvas{
   position:absolute;
   inset:0;
+  width:100%;
+  height:100%;
   pointer-events:none;
+  z-index:2;
 }
 
 /* CONTADOR */
@@ -50,25 +41,48 @@ canvas{
   display:flex;
   gap:10px;
   cursor:grab;
-  z-index:20;
+  z-index:10;
 }
 
-.contador:active{cursor:grabbing;}
-
 .tiempo{
-  width:68px;
-  height:78px;
+  width:65px;
+  height:75px;
   background:linear-gradient(145deg,#fff,#f2f2f2);
   border-radius:14px;
   display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
-  box-shadow:0 6px 14px rgba(0,0,0,.25);
+  box-shadow:0 6px 14px rgba(0,0,0,.3);
 }
 
-.tiempo span{font-size:26px;font-weight:700;color:#a88a4a;}
-.tiempo small{font-size:11px;color:#444;margin-top:3px;}
+.tiempo span{
+  font-size:24px;
+  font-weight:700;
+  color:#a88a4a;
+}
+
+.tiempo small{
+  font-size:11px;
+  color:#444;
+}
+
+.audio-btn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  background:linear-gradient(145deg,#ff6bd6,#ff1aa3);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:white;
+  font-size:30px;
+  z-index:999;
+  cursor:pointer;
+}
 </style>
 </head>
 
@@ -76,12 +90,16 @@ canvas{
 
 <div class="contenedor">
 
-<div class="bloque bloque-particulas">
+<div class="bloque">
   <img src="bloque1.webp">
   <canvas id="particulas"></canvas>
 </div>
 
-<div class="bloque bloque-particulas-xv">
+<div class="bloque">
+  <img src="bloque2.webp">
+</div>
+
+<div class="bloque">
   <img src="bloque3.webp">
   <canvas id="particulasXV"></canvas>
 </div>
@@ -89,15 +107,22 @@ canvas{
 <div class="bloque"><img src="bloque4.webp"></div>
 <div class="bloque"><img src="bloque5.webp"></div>
 
-<div class="bloque bloque-contador" id="bloque6">
+<div class="bloque" id="bloque6">
   <img src="bloque6.webp">
+
   <div class="contador" id="contador">
     <div class="tiempo"><span id="dias">00</span><small>Días</small></div>
     <div class="tiempo"><span id="horas">00</span><small>Horas</small></div>
     <div class="tiempo"><span id="minutos">00</span><small>Min</small></div>
     <div class="tiempo"><span id="segundos">00</span><small>Seg</small></div>
   </div>
+
 </div>
+
+<div class="bloque"><img src="bloque7.webp"></div>
+<div class="bloque"><img src="bloque8.webp"></div>
+<div class="bloque"><img src="bloque9.webp"></div>
+<div class="bloque"><img src="bloque10.webp"></div>
 
 </div>
 
@@ -109,100 +134,97 @@ canvas{
 
 <script>
 /* AUDIO */
-const musica = document.getElementById("musica");
-const btn = document.getElementById("btnAudio");
-let activo = false;
+const musica=document.getElementById("musica");
+const btn=document.getElementById("btnAudio");
+let activo=false;
 
-btn.onclick = ()=>{
-  activo ? musica.pause() : musica.play();
-  btn.innerHTML = activo ? "▶" : "⏸";
-  activo = !activo;
+btn.onclick=()=>{
+  activo?musica.pause():musica.play();
+  btn.innerHTML=activo?"▶":"⏸";
+  activo=!activo;
+};
+
+/* PARTÍCULAS */
+function crearParticulas(canvas,color){
+  const ctx=canvas.getContext("2d");
+  let w,h;
+  function resize(){
+    w=canvas.width=canvas.offsetWidth;
+    h=canvas.height=canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener("resize",resize);
+
+  const p=[...Array(35)].map(()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*2+1,dx:(Math.random()-.5),dy:(Math.random()-.5),a:Math.random()}));
+
+  (function anim(){
+    ctx.clearRect(0,0,w,h);
+    p.forEach(o=>{
+      ctx.beginPath();
+      ctx.arc(o.x,o.y,o.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${color},${o.a})`;
+      ctx.fill();
+      o.x+=o.dx;
+      o.y+=o.dy;
+      if(o.x<0||o.x>w)o.dx*=-1;
+      if(o.y<0||o.y>h)o.dy*=-1;
+    });
+    requestAnimationFrame(anim);
+  })();
 }
 
-/* SCROLL */
-const bloques = document.querySelectorAll('.bloque');
-const observer = new IntersectionObserver(entries=>{
-  entries.forEach(e=>e.isIntersecting && e.target.classList.add('visible'))
-},{threshold:.15});
-bloques.forEach(b=>observer.observe(b));
-
-/* PARTÍCULAS DORADAS */
-const canvas = document.getElementById("particulas");
-const ctx = canvas.getContext("2d");
-let w,h;
-function resize(){
-  w=canvas.width=canvas.offsetWidth;
-  h=canvas.height=canvas.offsetHeight;
-}
-resize(); window.onresize=resize;
-
-const particulas=[...Array(40)].map(()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*2+1,dx:(Math.random()-.5),dy:(Math.random()-.5),a:Math.random()}));
-
-(function anim(){
-  ctx.clearRect(0,0,w,h);
-  particulas.forEach(p=>{
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(255,215,0,${p.a})`;
-    ctx.fill();
-    p.x+=p.dx; p.y+=p.dy;
-    if(p.x<0||p.x>w)p.dx*=-1;
-    if(p.y<0||p.y>h)p.dy*=-1;
-  });
-  requestAnimationFrame(anim);
-})();
+crearParticulas(document.getElementById("particulas"),"255,215,0");
+crearParticulas(document.getElementById("particulasXV"),"192,192,192");
 
 /* CUENTA REGRESIVA */
-const fechaEvento = new Date("December 17, 2026 18:00:00").getTime();
+const fechaEvento=new Date("December 17, 2026 18:00:00").getTime();
 
 setInterval(()=>{
-  const d = fechaEvento - new Date().getTime();
-  if(d<0) return;
-  dias.innerText = Math.floor(d/86400000).toString().padStart(2,"0");
-  horas.innerText = Math.floor((d%86400000)/3600000).toString().padStart(2,"0");
-  minutos.innerText = Math.floor((d%3600000)/60000).toString().padStart(2,"0");
-  segundos.innerText = Math.floor((d%60000)/1000).toString().padStart(2,"0");
+  const d=fechaEvento-new Date().getTime();
+  if(d<0)return;
+  dias.innerText=Math.floor(d/86400000).toString().padStart(2,"0");
+  horas.innerText=Math.floor((d%86400000)/3600000).toString().padStart(2,"0");
+  minutos.innerText=Math.floor((d%3600000)/60000).toString().padStart(2,"0");
+  segundos.innerText=Math.floor((d%60000)/1000).toString().padStart(2,"0");
 },1000);
 
-/* DRAG CONTADOR */
-const contador = document.getElementById("contador");
-let moviendo=false, dragOffsetX=0, dragOffsetY=0;
+/* DRAG */
+const contador=document.getElementById("contador");
+let mov=false,ox=0,oy=0;
 
-contador.onmousedown = e =>{
-  moviendo=true;
-  dragOffsetX=e.offsetX;
-  dragOffsetY=e.offsetY;
-}
+contador.onmousedown=e=>{
+  mov=true; ox=e.offsetX; oy=e.offsetY;
+};
 
-document.onmousemove = e=>{
-  if(!moviendo) return;
-  const rect=bloque6.getBoundingClientRect();
-  contador.style.left=(e.clientX-rect.left-dragOffsetX)+"px";
-  contador.style.top=(e.clientY-rect.top-dragOffsetY)+"px";
+document.onmousemove=e=>{
+  if(!mov)return;
+  const r=bloque6.getBoundingClientRect();
+  contador.style.left=(e.clientX-r.left-ox)+"px";
+  contador.style.top=(e.clientY-r.top-oy)+"px";
   contador.style.transform="none";
-}
+};
 
-document.onmouseup = ()=>moviendo=false;
+document.onmouseup=()=>mov=false;
 
 /* TOUCH */
-contador.ontouchstart = e=>{
-  moviendo=true;
+contador.ontouchstart=e=>{
+  mov=true;
   const t=e.touches[0];
   const r=contador.getBoundingClientRect();
-  dragOffsetX=t.clientX-r.left;
-  dragOffsetY=t.clientY-r.top;
-}
+  ox=t.clientX-r.left;
+  oy=t.clientY-r.top;
+};
 
-document.ontouchmove = e=>{
-  if(!moviendo) return;
+document.ontouchmove=e=>{
+  if(!mov)return;
   const t=e.touches[0];
-  const rect=bloque6.getBoundingClientRect();
-  contador.style.left=(t.clientX-rect.left-dragOffsetX)+"px";
-  contador.style.top=(t.clientY-rect.top-dragOffsetY)+"px";
+  const r=bloque6.getBoundingClientRect();
+  contador.style.left=(t.clientX-r.left-ox)+"px";
+  contador.style.top=(t.clientY-r.top-oy)+"px";
   contador.style.transform="none";
-}
+};
 
-document.ontouchend=()=>moviendo=false;
+document.ontouchend=()=>mov=false;
 </script>
 
 </body>
