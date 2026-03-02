@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -24,7 +25,6 @@ body{
 .contenedor{
   max-width:430px;
   width:100%;
-  overflow:hidden;
 }
 
 .bloque img{
@@ -87,17 +87,7 @@ body{
   pointer-events:none;
 }
 
-/* ZOOM SUAVE PREMIUM BLOQUE 2 */
-.bloque-btn img{
-  animation: zoomSuave 14s ease-in-out infinite;
-  will-change:transform;
-}
-
-@keyframes zoomSuave{
-  0%{ transform:scale(1); }
-  50%{ transform:scale(1.045); }
-  100%{ transform:scale(1); }
-}
+.texto-boton span{ display:block; }
 
 /* PARTICULAS */
 .bloque-particulas,
@@ -154,20 +144,6 @@ canvas{
   100%{transform:translateY(0)}
 }
 
-/* PARALLAX SUAVE BLOQUES 4 Y 5 */
-.parallax img{
-  will-change:transform;
-  transition:transform .15s linear;
-}
-
-/* BRILLO SUAVE PREMIUM */
-.glow{
-  position:absolute;
-  inset:0;
-  background:radial-gradient(circle at 50% 30%,rgba(255,180,230,.18),transparent 60%);
-  pointer-events:none;
-  mix-blend-mode:screen;
-}
 </style>
 </head>
 
@@ -195,8 +171,8 @@ canvas{
   <canvas id="particulasXV"></canvas>
 </div>
 
-<div class="bloque parallax"><img src="bloque4.webp"><div class="glow"></div></div>
-<div class="bloque parallax"><img src="bloque5.webp"><div class="glow"></div></div>
+<div class="bloque"><img src="bloque4.webp"></div>
+<div class="bloque"><img src="bloque5.webp"></div>
 
 <div class="bloque bloque-contador">
   <img src="bloque6.webp">
@@ -235,7 +211,7 @@ btn.onclick=()=>{
   else{ musica.pause(); btn.innerHTML="▶"; activo=false; }
 };
 
-/* SCROLL FIX */
+/* SCROLL FIX REAL */
 const bloques=document.querySelectorAll('.bloque');
 const obs=new IntersectionObserver(e=>{
   e.forEach(x=>{ if(x.isIntersecting)x.target.classList.add('visible'); });
@@ -246,14 +222,6 @@ window.addEventListener("load",()=>{
   bloques.forEach(b=>{
     if(b.getBoundingClientRect().top<window.innerHeight*1.1)
       b.classList.add('visible');
-  });
-});
-
-/* PARALLAX BLOQUES 4 Y 5 */
-window.addEventListener("scroll",()=>{
-  document.querySelectorAll(".parallax img").forEach(img=>{
-    const y=(window.scrollY-img.offsetTop)*.08;
-    img.style.transform=`translateY(${y}px) scale(1.02)`;
   });
 });
 
