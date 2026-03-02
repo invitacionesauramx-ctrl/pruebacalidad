@@ -290,6 +290,16 @@ const observer = new IntersectionObserver(entries => {
 
 bloques.forEach(bloque => observer.observe(bloque));
 
+// Activar bloques visibles al cargar
+window.addEventListener("load",()=>{
+  bloques.forEach(bloque=>{
+    const rect = bloque.getBoundingClientRect();
+    if(rect.top < window.innerHeight * 0.9){
+      bloque.classList.add("visible");
+    }
+  });
+});
+
 const canvas = document.getElementById('particulas');
 const ctx = canvas.getContext('2d');
 
