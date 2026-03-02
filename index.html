@@ -134,6 +134,50 @@ body{
   --offset-y: 50%; /* porcentaje vertical */
 }
 
+.bloque-contador{
+  position: relative;
+}
+
+.contador{
+  position: absolute;
+  left: 50%;
+  top: 70%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  gap: 10px;
+  cursor: grab;
+  z-index: 20;
+}
+
+.contador:active{
+  cursor: grabbing;
+}
+
+.tiempo{
+  width: 68px;
+  height: 78px;
+  background: linear-gradient(145deg,#fff,#f2f2f2);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 6px 14px rgba(0,0,0,.25);
+}
+
+.tiempo span{
+  font-size: 26px;
+  font-weight: 700;
+  color: #a88a4a;
+}
+
+.tiempo small{
+  font-size: 11px;
+  letter-spacing: .5px;
+  color: #444;
+  margin-top: 3px;
+}
+
 </style>
 </head>
 
@@ -160,7 +204,29 @@ body{
 </div>
   <div class="bloque"><img src="bloque4.webp"></div>
   <div class="bloque"><img src="bloque5.webp"></div>
-  <div class="bloque"><img src="bloque6.webp"></div>
+ <div class="bloque bloque-contador" id="bloque6">
+  <img src="bloque6.webp">
+
+  <div class="contador draggable" id="contador">
+    <div class="tiempo">
+      <span id="dias">00</span>
+      <small>Días</small>
+    </div>
+    <div class="tiempo">
+      <span id="horas">00</span>
+      <small>Horas</small>
+    </div>
+    <div class="tiempo">
+      <span id="minutos">00</span>
+      <small>Min</small>
+    </div>
+    <div class="tiempo">
+      <span id="segundos">00</span>
+      <small>Seg</small>
+    </div>
+  </div>
+
+</div>
   <div class="bloque"><img src="bloque7.webp"></div>
   <div class="bloque"><img src="bloque8.webp"></div>
   <div class="bloque"><img src="bloque9.webp"></div>
@@ -307,6 +373,75 @@ function animarParticulasXV() {
   requestAnimationFrame(animarParticulasXV);
 }
 animarParticulasXV();
+
+// CUENTA REGRESIVA
+const fechaEvento = new Date("December 17, 2026 18:00:00").getTime();
+
+function actualizarCuenta() {
+  const ahora = new Date().getTime();
+  const distancia = fechaEvento - ahora;
+
+  if (distancia < 0) return;
+
+  document.getElementById("dias").innerText =
+    Math.floor(distancia / (1000 * 60 * 60 * 24)).toString().padStart(2,"0");
+
+  document.getElementById("horas").innerText =
+    Math.floor((distancia % (1000*60*60*24))/(1000*60*60)).toString().padStart(2,"0");
+
+  document.getElementById("minutos").innerText =
+    Math.floor((distancia % (1000*60*60))/(1000*60)).toString().padStart(2,"0");
+
+  document.getElementById("segundos").innerText =
+    Math.floor((distancia % (1000*60))/1000).toString().padStart(2,"0");
+}
+
+setInterval(actualizarCuenta,1000);
+actualizarCuenta();
+
+
+// ==== CONTROL PARA MOVER POSICIÓN ====
+const contador = document.getElementById("contador");
+let moviendo = false;
+let offsetX = 0;
+let offsetY = 0;
+
+contador.addEventListener("mousedown", e => {
+  moviendo = true;
+  offsetX = e.offsetX;
+  offsetY = e.offsetY;
+});
+
+document.addEventListener("mousemove", e => {
+  if(!moviendo) return;
+  const rect = document.getElementById("bloque6").getBoundingClientRect();
+  contador.style.left = (e.clientX - rect.left - offsetX) + "px";
+  contador.style.top = (e.clientY - rect.top - offsetY) + "px";
+  contador.style.transform = "none";
+});
+
+document.addEventListener("mouseup", () => moviendo = false);
+
+
+// SOPORTE TOUCH (MÓVIL)
+contador.addEventListener("touchstart", e => {
+  moviendo = true;
+  const touch = e.touches[0];
+  const rect = contador.getBoundingClientRect();
+  offsetX = touch.clientX - rect.left;
+  offsetY = touch.clientY - rect.top;
+});
+
+document.addEventListener("touchmove", e => {
+  if(!moviendo) return;
+  const touch = e.touches[0];
+  const rect = document.getElementById("bloque6").getBoundingClientRect();
+  contador.style.left = (touch.clientX - rect.left - offsetX) + "px";
+  contador.style.top = (touch.clientY - rect.top - offsetY) + "px";
+  contador.style.transform = "none";
+});
+
+document.addEventListener("touchend", () => moviendo = false);
 
 </script>
 </body>
