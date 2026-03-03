@@ -6,6 +6,43 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Invitación Digital</title>
 
+/* BLOQUE 5 ESTRELLAS */
+.bloque-estrellas{
+  position:relative;
+  overflow:hidden;
+}
+
+.estrella{
+  position:absolute;
+  width:8px;
+  height:8px;
+  background:radial-gradient(circle,
+    rgba(255,255,180,1) 0%,
+    rgba(255,215,0,0.9) 40%,
+    rgba(255,215,0,0.2) 70%,
+    transparent 100%);
+  border-radius:50%;
+  box-shadow:0 0 8px rgba(255,215,0,0.9);
+  animation:destello 2.5s ease-in-out infinite;
+}
+
+/* Posiciones */
+.e1{ top:20%; left:25%; animation-delay:0s; }
+.e2{ top:35%; right:20%; animation-delay:.6s; }
+.e3{ bottom:30%; left:30%; animation-delay:1.2s; }
+.e4{ bottom:20%; right:25%; animation-delay:1.8s; }
+
+@keyframes destello{
+  0%,100%{
+    transform:scale(0.6);
+    opacity:0.4;
+  }
+  50%{
+    transform:scale(1.4);
+    opacity:1;
+  }
+}
+
 <style>
 *{
   margin:0;
@@ -214,7 +251,13 @@ canvas{
 <div class="bloque bloque-reflejo">
   <img src="bloque4.webp">
 </div>
-<div class="bloque"><img src="bloque5.webp"></div>
+<div class="bloque bloque-estrellas">
+  <img src="bloque5.webp">
+  <span class="estrella e1"></span>
+  <span class="estrella e2"></span>
+  <span class="estrella e3"></span>
+  <span class="estrella e4"></span>
+</div>
 
 <div class="bloque bloque-contador">
   <img src="bloque6.webp">
