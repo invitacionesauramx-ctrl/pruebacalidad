@@ -317,6 +317,10 @@ window.addEventListener("load",()=>{
   });
 });
 
+setTimeout(()=>{
+  bloques.forEach(b=>b.classList.add('visible'));
+},1200);
+
 /* PARTICULAS BLOQUE 1 */
 const c1=document.getElementById("particulas");
 const x1=c1.getContext("2d");
