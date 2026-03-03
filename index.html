@@ -323,6 +323,28 @@ canvas{
 <div class="bloque"><img src="bloque8.webp"></div>
 <div class="bloque"><img src="bloque9.webp"></div>
 <div class="bloque"><img src="bloque10.webp"></div>
+<div class="bloque">
+  <div style="padding:30px; background:#fff; text-align:center;">
+    <h2 style="margin-bottom:15px; color:#ff3fa7;">Confirmar Asistencia</h2>
+
+    <form id="formConfirmacion" style="display:flex; flex-direction:column; gap:10px;">
+      <input type="text" id="nombre" placeholder="Tu nombre" required style="padding:10px;">
+      <input type="tel" id="telefono" placeholder="Tu teléfono" required style="padding:10px;">
+
+      <select id="estado" required style="padding:10px;">
+        <option value="">¿Asistirás?</option>
+        <option value="si">Sí asistiré</option>
+        <option value="no">No podré asistir</option>
+      </select>
+
+      <input type="number" id="personas" placeholder="Número de personas" min="1" required style="padding:10px;">
+
+      <button type="submit" style="padding:12px; background:#ff3fa7; color:#fff; border:none;">
+        Confirmar
+      </button>
+    </form>
+  </div>
+</div>
 
 </div>
 
@@ -333,6 +355,7 @@ canvas{
 <div class="audio-btn" id="btnAudio">▶</div>
 
 <script>
+
 /* AUDIO */
 const musica=document.getElementById("musica");
 const btn=document.getElementById("btnAudio");
@@ -367,57 +390,6 @@ setTimeout(()=>{
   bloques.forEach(b=>b.classList.add('visible'));
 },1200);
 
-/* PARTICULAS BLOQUE 1 */
-const c1=document.getElementById("particulas");
-const x1=c1.getContext("2d");
-function rs1(){c1.width=c1.offsetWidth;c1.height=c1.offsetHeight}
-rs1();addEventListener("resize",rs1);
-
-let p1=[];
-for(let i=0;i<40;i++)p1.push({x:Math.random()*c1.width,y:Math.random()*c1.height,dx:(Math.random()-.5)*.6,dy:(Math.random()-.5)*.6,r:Math.random()*2+1,a:Math.random()});
-function loop1(){
-  x1.clearRect(0,0,c1.width,c1.height);
-  p1.forEach(p=>{
-    x1.beginPath();
-    x1.arc(p.x,p.y,p.r,0,Math.PI*2);
-    x1.fillStyle=`rgba(255,215,0,${p.a})`;
-    x1.fill();
-    p.x+=p.dx;p.y+=p.dy;
-    if(p.x<0||p.x>c1.width)p.dx*=-1;
-    if(p.y<0||p.y>c1.height)p.dy*=-1;
-  });
-  requestAnimationFrame(loop1);
-}
-loop1();
-
-/* PARTICULAS BLOQUE 3 */
-const cXV=document.getElementById("particulasXV");
-const xXV=cXV.getContext("2d");
-function rsXV(){cXV.width=cXV.offsetWidth;cXV.height=cXV.offsetHeight}
-rsXV();addEventListener("resize",rsXV);
-
-let pXV=[];
-for(let i=0;i<30;i++)pXV.push({x:cXV.width/2,y:cXV.height/2,dx:(Math.random()-.5)*1.4,dy:(Math.random()-.5)*1.4,r:Math.random()*2+1,a:Math.random()});
-function loopXV(){
-  xXV.clearRect(0,0,cXV.width,cXV.height);
-
-  pXV.forEach(p=>{
-    xXV.beginPath();
-    xXV.arc(p.x,p.y,p.r,0,Math.PI*2);
-    xXV.fillStyle=`rgba(192,192,192,${p.a})`;
-    xXV.fill();
-
-    p.x += p.dx;
-    p.y += p.dy;
-
-    if(p.x < 0 || p.x > cXV.width) p.dx *= -1;
-    if(p.y < 0 || p.y > cXV.height) p.dy *= -1;
-  });
-
-  requestAnimationFrame(loopXV);
-}
-loopXV();
-
 /* CONTADOR */
 const fechaEvento=new Date("2026-12-24T22:00:00").getTime();
 setInterval(()=>{
@@ -428,35 +400,47 @@ setInterval(()=>{
   document.getElementById("segundos").innerText=Math.floor(d/1000)%60;
 },1000);
 
-/* PARTICULAS ROSAS CONTADOR */
-const cC=document.getElementById("particulasCountdown");
-const xC=cC.getContext("2d");
-function rsC(){cC.width=cC.offsetWidth;cC.height=cC.offsetHeight}
-rsC();addEventListener("resize",rsC);
+</script>
 
-let pC=[];
-function spawn(){
-  return{ x:cC.width/2+(Math.random()*200-100),
-          y:cC.height*.75,
-          dx:(Math.random()-.5)*1.2,
-          dy:-Math.random()*2-1,
-          r:Math.random()*2+1,
-          a:1 };
-}
-function loopC(){
-  xC.clearRect(0,0,cC.width,cC.height);
-  if(pC.length<120)pC.push(spawn());
-  pC.forEach((p,i)=>{
-    xC.beginPath();
-    xC.arc(p.x,p.y,p.r,0,Math.PI*2);
-    xC.fillStyle=`rgba(255,80,180,${p.a})`;
-    xC.fill();
-    p.x+=p.dx;p.y+=p.dy;p.a-=.015;
-    if(p.a<=0)pC.splice(i,1);
+<!-- 🔥 FIREBASE VA SEPARADO -->
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD-PRgs8oaouJxaCPbwInWGL01O-Ffhbws",
+  authDomain: "confirmaciones-boda-de9fb.firebaseapp.com",
+  projectId: "confirmaciones-boda-de9fb",
+  storageBucket: "confirmaciones-boda-de9fb.firebasestorage.app",
+  messagingSenderId: "108154294992",
+  appId: "1:108154294992:web:493bab4db7b66b749d84d5",
+  measurementId: "G-9D3ESS8ZTP"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+document.getElementById("formConfirmacion").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const nombre = document.getElementById("nombre").value;
+  const telefono = document.getElementById("telefono").value;
+  const estado = document.getElementById("estado").value;
+  const personas = document.getElementById("personas").value;
+
+  await addDoc(collection(db, "confirmaciones"), {
+    nombre,
+    telefono,
+    estado,
+    personas: Number(personas),
+    fecha: new Date()
   });
-  requestAnimationFrame(loopC);
-}
-loopC();
+
+  alert("Confirmación enviada ❤️");
+  e.target.reset();
+});
+
 </script>
 
 </body>
