@@ -71,13 +71,16 @@ body{
 }
 
 /* TEXTO BLOQUE 2 */
-.bloque-btn{ position:relative; }
+.bloque-btn{
+  position:relative;
+  overflow:hidden; /* IMPORTANTE */
+}
 
 .bloque-btn::after{
   content:"";
   position:absolute;
   top:0;
-  left:-75%;
+  left:0;
   width:50%;
   height:100%;
   background:linear-gradient(
@@ -86,25 +89,25 @@ body{
     rgba(255,255,255,0.30) 50%,
     rgba(255,255,255,0) 100%
   );
-  transform:skewX(-20deg);
+  transform:translateX(-150%) skewX(-20deg);
   pointer-events:none;
   animation:shine 3s ease-in-out infinite;
 }
 
 @keyframes shine{
   0%{
-    left:-75%;
+    transform:translateX(-150%) skewX(-20deg);
     opacity:0;
   }
-  10%{
+  20%{
     opacity:1;
   }
-  30%{
-    left:125%;
+  60%{
+    transform:translateX(250%) skewX(-20deg);
     opacity:0;
   }
   100%{
-    left:125%;
+    transform:translateX(250%) skewX(-20deg);
     opacity:0;
   }
 }
