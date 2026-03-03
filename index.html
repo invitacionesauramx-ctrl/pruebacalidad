@@ -347,6 +347,26 @@ canvas{
   </div>
 </div>
 
+<!-- BLOQUE MÁS OPCIONES (QR + Calendario) -->
+<div class="bloque bloque-botones" style="text-align:center; padding:30px; background:#fff;">
+  <h2 style="margin-bottom:15px; color:#ff3fa7;">Más opciones</h2>
+
+  <!-- Botón QR -->
+  <button id="btnQR" style="padding:12px 20px; margin:10px; background:#ff86cf; color:#fff; border:none; border-radius:8px; cursor:pointer;">
+    Ver QR
+  </button>
+
+  <!-- Botón Calendario -->
+  <a id="btnCalendario" href="#" target="_blank" style="padding:12px 20px; margin:10px; display:inline-block; background:#ff3fa7; color:#fff; border-radius:8px; text-decoration:none;">
+    Agregar al calendario
+  </a>
+
+  <!-- Contenedor oculto para el QR -->
+  <div id="contenedorQR" style="margin-top:15px; display:none;">
+    <img id="imagenQR" src="" alt="QR Invitación" style="width:180px; height:180px;">
+  </div>
+</div>
+
 </div>
 
 <audio id="musica" preload="auto" loop>
@@ -520,6 +540,33 @@ document.getElementById("formConfirmacion").addEventListener("submit", async (e)
 });
 </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+<script>
+  // QR
+  const btnQR = document.getElementById("btnQR");
+  const contQR = document.getElementById("contenedorQR");
+  const imgQR = document.getElementById("imagenQR");
+
+  btnQR.addEventListener("click", () => {
+    const urlInvitacion = window.location.href; // tu invitación
+    const qr = new QRious({ value: urlInvitacion, size: 180 });
+    imgQR.src = qr.toDataURL();
+    contQR.style.display = contQR.style.display === "none" ? "block" : "none";
+  });
+
+  // Calendario
+  const btnCalendario = document.getElementById("btnCalendario");
+  btnCalendario.addEventListener("click", () => {
+    const start = "20261224T220000"; // fecha del evento
+    const end = "20261224T230000";   // hora de fin (aprox)
+    const title = "XV de Lupita";
+    const details = "Celebración del XV de Lupita";
+    const location = "Dirección del evento";
+
+    const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`;
+    btnCalendario.href = url;
+  });
+</script>
 
 </body>
 </html>
