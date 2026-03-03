@@ -255,6 +255,75 @@ canvas{
   transform: translate(-50%, -60%); /* Centra el botón exacto */
 }
 
+/* BLOQUE 9 */
+.bloque-acordeon{
+  position:relative;
+  overflow:hidden;
+}
+
+/* BOTÓN 3D */
+.btn-datos{
+  position:absolute;
+  bottom:20%;
+  left:50%;
+  transform:translateX(-50%);
+  padding:14px 28px;
+  background:linear-gradient(145deg,#ff86cf,#ff3fa7);
+  color:#fff;
+  font-weight:700;
+  border-radius:16px;
+  cursor:pointer;
+  box-shadow:
+    0 8px 0 #c21875,
+    0 12px 20px rgba(255,0,170,0.5);
+  transition:.2s;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+/* Efecto presionado */
+.btn-datos:active{
+  transform:translateX(-50%) translateY(6px);
+  box-shadow:
+    0 2px 0 #c21875,
+    0 6px 12px rgba(255,0,170,0.4);
+}
+
+/* Flecha animada */
+.flecha{
+  font-size:14px;
+  animation:rebote 1.2s infinite;
+}
+
+@keyframes rebote{
+  0%,100%{ transform:translateY(0); }
+  50%{ transform:translateY(4px); }
+}
+
+/* PANEL ACORDEÓN */
+.panel-datos{
+  position:absolute;
+  bottom:5%;
+  left:50%;
+  transform:translateX(-50%);
+  width:85%;
+  background:rgba(255,255,255,0.95);
+  border-radius:18px;
+  padding:0 20px;
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .5s ease, padding .4s ease;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+  text-align:left;
+}
+
+/* Cuando está activo */
+.panel-datos.activo{
+  max-height:200px;
+  padding:20px;
+}
+
 </style>
 </head>
 
@@ -323,7 +392,22 @@ canvas{
 <div class="bloque bloque-reflejo">
   <img src="bloque8.webp">
 </div>
-<div class="bloque"><img src="bloque9.webp"></div>
+<div class="bloque bloque-acordeon">
+  <img src="bloque9.webp">
+
+  <!-- Botón 3D -->
+  <div class="btn-datos" onclick="toggleDatos()">
+    Toca aquí
+    <span class="flecha">▼</span>
+  </div>
+
+  <!-- Ventana acordeón -->
+  <div class="panel-datos" id="panelDatos">
+    <p><strong>Beneficiario:</strong> María Fernanda López</p>
+    <p><strong>Banco:</strong> BBVA Bancomer</p>
+    <p><strong>Cuenta:</strong> 012345678901234567</p>
+  </div>
+</div>
 <div class="bloque"><img src="bloque10.webp"></div>
 
 <div class="bloque">
@@ -502,6 +586,11 @@ function loopC(){
   requestAnimationFrame(loopC);
 }
 loopC();
+
+function toggleDatos(){
+  const panel = document.getElementById("panelDatos");
+  panel.classList.toggle("activo");
+}
 
 </script>
 
