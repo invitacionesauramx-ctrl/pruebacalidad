@@ -73,6 +73,43 @@ body{
 /* TEXTO BLOQUE 2 */
 .bloque-btn{ position:relative; }
 
+/* REFLEJO BLOQUE 2 */
+.bloque-btn::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-75%;
+  width:50%;
+  height:100%;
+  background:linear-gradient(
+    120deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.35) 50%,
+    rgba(255,255,255,0) 100%
+  );
+  transform:skewX(-20deg);
+  pointer-events:none;
+  opacity:0;
+}
+
+.bloque-btn.visible::after{
+  animation:shine 2.5s ease forwards;
+}
+
+@keyframes shine{
+  0%{
+    left:-75%;
+    opacity:0;
+  }
+  20%{
+    opacity:1;
+  }
+  100%{
+    left:125%;
+    opacity:0;
+  }
+}
+
 .texto-boton{
   position:absolute;
   left:50%;
