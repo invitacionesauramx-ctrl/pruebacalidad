@@ -73,7 +73,6 @@ body{
 /* TEXTO BLOQUE 2 */
 .bloque-btn{ position:relative; }
 
-/* REFLEJO BLOQUE 2 */
 .bloque-btn::after{
   content:"";
   position:absolute;
@@ -103,25 +102,6 @@ body{
   30%{
     left:125%;
     opacity:0;
-  }
-  100%{
-    left:125%;
-    opacity:0;
-  }
-}
-
-
-.bloque-btn.visible::after{
-  animation:shine 2.5s ease forwards;
-}
-
-@keyframes shine{
-  0%{
-    left:-75%;
-    opacity:0;
-  }
-  20%{
-    opacity:1;
   }
   100%{
     left:125%;
