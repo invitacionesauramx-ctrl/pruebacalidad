@@ -71,12 +71,14 @@ body{
 }
 
 /* TEXTO BLOQUE 2 */
-.bloque-btn{
+.bloque-btn,
+.bloque-reflejo{
   position:relative;
-  overflow:hidden; /* IMPORTANTE */
+  overflow:hidden;
 }
 
-.bloque-btn::after{
+.bloque-btn::after,
+.bloque-reflejo::after{
   content:"";
   position:absolute;
   top:0;
@@ -93,7 +95,6 @@ body{
   pointer-events:none;
   animation:shine 3s ease-in-out infinite;
 }
-
 @keyframes shine{
   0%{
     transform:translateX(-150%) skewX(-20deg);
@@ -210,7 +211,9 @@ canvas{
   <canvas id="particulasXV"></canvas>
 </div>
 
-<div class="bloque"><img src="bloque4.webp"></div>
+<div class="bloque bloque-reflejo">
+  <img src="bloque4.webp">
+</div>
 <div class="bloque"><img src="bloque5.webp"></div>
 
 <div class="bloque bloque-contador">
