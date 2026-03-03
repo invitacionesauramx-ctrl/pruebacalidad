@@ -258,13 +258,20 @@ let pXV=[];
 for(let i=0;i<20;i++)pXV.push({x:cXV.width/2,y:cXV.height/2,dx:(Math.random()-.5)*1.4,dy:(Math.random()-.5)*1.4,r:Math.random()*2+1,a:Math.random()});
 function loopXV(){
   xXV.clearRect(0,0,cXV.width,cXV.height);
+
   pXV.forEach(p=>{
     xXV.beginPath();
     xXV.arc(p.x,p.y,p.r,0,Math.PI*2);
     xXV.fillStyle=`rgba(192,192,192,${p.a})`;
     xXV.fill();
-    p.x+=p.dx;p.y+=p.dy;
+
+    p.x += p.dx;
+    p.y += p.dy;
+
+    if(p.x < 0 || p.x > cXV.width) p.dx *= -1;
+    if(p.y < 0 || p.y > cXV.height) p.dy *= -1;
   });
+
   requestAnimationFrame(loopXV);
 }
 loopXV();
